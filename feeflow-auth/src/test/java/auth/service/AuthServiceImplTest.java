@@ -59,9 +59,9 @@ class AuthServiceImplTest {
     @BeforeEach
     void setUp() {
         institute = Institute.builder().id(1).name("Test Institute").build();
-        
+
         List<UserRole> roles = new ArrayList<>();
-        
+
         user = User.builder()
                 .id(1)
                 .name("Test User")
@@ -70,7 +70,7 @@ class AuthServiceImplTest {
                 .institute(institute)
                 .roles(roles)
                 .build();
-                
+
         roles.add(UserRole.builder().user(user).role(Role.STUDENT).build());
 
         registerRequest = RegisterRequest.builder()
@@ -81,7 +81,7 @@ class AuthServiceImplTest {
                 .instituteId(1)
                 .role("STUDENT")
                 .build();
-        
+
         loginRequest = LoginRequest.builder()
                 .email("test@example.com")
                 .password("password")
@@ -132,7 +132,7 @@ class AuthServiceImplTest {
         assertEquals("jwt-token", response.getToken());
         assertEquals(user.getName(), response.getUser().getName());
     }
-    
+
     @Test
     void login_UserNotFound() {
         when(authenticationManager.authenticate(any())).thenReturn(mock(Authentication.class));
@@ -168,7 +168,7 @@ class AuthServiceImplTest {
 
         assertThrows(ResourceNotFoundException.class, () -> authService.getCurrentUser());
     }
-    
+
     @Test
     void logout_ClearsSecurityContext() {
         Authentication authentication = mock(Authentication.class);
