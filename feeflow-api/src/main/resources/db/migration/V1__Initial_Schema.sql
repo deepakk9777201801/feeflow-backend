@@ -34,13 +34,19 @@ CREATE TABLE IF NOT EXISTS public.users
 CREATE TABLE IF NOT EXISTS public.user_roles
 (
     id serial NOT NULL,
-    user_id integer,
+    user_id integer NOT NULL,
+    institute_id integer NOT NULL,
     role character varying(50) COLLATE pg_catalog."default",
     CONSTRAINT user_roles_pkey PRIMARY KEY (id),
     CONSTRAINT user_roles_user_id_fkey FOREIGN KEY (user_id)
         REFERENCES public.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT user_roles_institute_id_fkey FOREIGN KEY (institute_id)
+        REFERENCES public.institutes (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT user_roles_unique UNIQUE (user_id, institute_id, role)
 );
 
 CREATE TABLE IF NOT EXISTS public.batches

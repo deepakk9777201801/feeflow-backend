@@ -123,7 +123,7 @@ class AuthServiceImplTest {
     @Test
     void login_Success() {
         when(authenticationManager.authenticate(any())).thenReturn(mock(Authentication.class));
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+        when(userRepository.findByEmailWithRoles(anyString())).thenReturn(Optional.of(user));
         when(jwtService.generateToken(any())).thenReturn("jwt-token");
 
         AuthResponse response = authService.login(loginRequest);
@@ -136,7 +136,7 @@ class AuthServiceImplTest {
     @Test
     void login_UserNotFound() {
         when(authenticationManager.authenticate(any())).thenReturn(mock(Authentication.class));
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(userRepository.findByEmailWithRoles(anyString())).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> authService.login(loginRequest));
     }
@@ -148,7 +148,7 @@ class AuthServiceImplTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
         when(authentication.getName()).thenReturn("test@example.com");
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+        when(userRepository.findByEmailWithRoles("test@example.com")).thenReturn(Optional.of(user));
 
         AuthResponse response = authService.getCurrentUser();
 
@@ -164,7 +164,7 @@ class AuthServiceImplTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
         when(authentication.getName()).thenReturn("test@example.com");
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
+        when(userRepository.findByEmailWithRoles("test@example.com")).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> authService.getCurrentUser());
     }

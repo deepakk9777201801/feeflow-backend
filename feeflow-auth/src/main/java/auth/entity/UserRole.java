@@ -20,6 +20,10 @@ public class UserRole {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "institute_id")
+    private Institute institute;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;

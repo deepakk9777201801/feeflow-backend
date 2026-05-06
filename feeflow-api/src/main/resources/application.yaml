@@ -35,11 +35,22 @@ spring:
           starttls:
             enable: true
 
+# Swagger / OpenAPI
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui/index.html
+    operationsSorter: method
+    tagsSorter: alpha
+    display-request-duration: true
+    try-it-out-enabled: true
+
 # Security & JWT Properties
 application:
   security:
     jwt:
       # 256-bit Hex encoded secret key for HMAC SHA256
       secret-key: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-      # Token expiration time in milliseconds (1 hour = 3600000 ms)
-      expiration: 3600000
+      # Token expiration time in milliseconds (5 minutes = 300000 ms)
+      expiration: 300000

@@ -86,6 +86,7 @@ public class AuthServiceImpl implements AuthService {
 
         UserRole userRole = UserRole.builder()
                 .user(user)
+                .institute(institute)
                 .role(roleToAssign)
                 .build();
         user.getRoles().add(userRole);
@@ -109,7 +110,7 @@ public class AuthServiceImpl implements AuthService {
                 )
         );
 
-        User user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmailWithRoles(request.getEmail())
                 .orElseThrow(() -> {
                     log.error("Authentication succeeded but user not found in DB: {}", request.getEmail());
                     return new ResourceNotFoundException("User not found with email: " + request.getEmail());
@@ -127,7 +128,7 @@ public class AuthServiceImpl implements AuthService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         log.debug("Fetching current user details for: {}", email);
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailWithRoles(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
 
         return buildAuthResponse(null, user); // Token is not needed for the 'me' response typically
@@ -146,7 +147,7 @@ public class AuthServiceImpl implements AuthService {
     private AuthResponse buildAuthResponse(String token, User user) {
         List<String> rolesStr = user.getRoles().stream()
                 .map(r -> r.getRole().name())
-                .collect(Collectors.toList());
+                .toList();
 
         AuthResponse.UserDto userDto = AuthResponse.UserDto.builder()
                 .id(user.getId())
@@ -203,6 +204,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private String generateOtp() {
-        return String.valueOf(100000 + new Random().nextInt(900000));
+        Random random = new Random();
+        return String.valueOf(100000 + random.nextInt(900000));
     }
 }
